@@ -3,21 +3,30 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Logger,
 	Param,
 	Patch,
 	Post,
-	Req,
+	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { JwtCacheInterceptor } from 'src/interceptors/jwt-cache.interceptor';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
+import { JwtAuthorizationGuard } from 'src/guards/jwt-auth.guard';
+import { OwnershipGuard } from 'src/guards/ownership.guard';
+import { ExcludeNullInterceptor } from 'src/interceptors/exclude-null.interceptor';
+import { TimeoutInterceptor } from 'src/interceptors/timeout.interceptor';
 
+@UseInterceptors(TimeoutInterceptor)
+@UseGuards(JwtAuthorizationGuard)
 @Controller('products')
 export class ProductsController {
-	constructor(private readonly productsService: ProductsService) {}
+	private logger: Logger;
+	constructor(private readonly productsService: ProductsService) {
+		this.logger = new Logger(ProductsController.name);
+	}
 
 	@Post()
 	create(@Body() createProductDto: CreateProductDto) {
@@ -25,10 +34,11 @@ export class ProductsController {
 	}
 
 	@UseInterceptors(JwtCacheInterceptor)
+	@UseInterceptors(ExcludeNullInterceptor)
+	@UseGuards(OwnershipGuard)
 	@Get()
-	findAll(@Req() request: Request) {
-		const store = request['store'];
-		console.log('🚀 ~ ProductsController ~ findAll ~ store:', store);
+	findAll() {
+		this.logger.log(`Method name: ${this.findAll.name}`);
 		return this.productsService.findAll();
 	}
 
