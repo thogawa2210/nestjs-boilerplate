@@ -15,6 +15,9 @@ export class Store {
 	@Column({ default: true })
 	isActive: boolean;
 
+	@Column({nullable: true})
+	district: string;
+
 	@OneToMany(() => Product, (product) => product.store)
 	products: Product[];
 }

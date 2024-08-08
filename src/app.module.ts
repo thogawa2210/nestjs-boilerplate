@@ -7,11 +7,10 @@ import { AppService } from './app.service';
 import { CustomThrottlerGuard } from './guards/throttler.guard';
 import { VersionMiddleware } from './middlewares/version.middlewares';
 import { OrdersModule } from './orders/orders.module';
-import { Product } from './products/entities/product.entity';
 import { ProductsModule } from './products/products.module';
-import { Store } from './stores/entities/store.entity';
 import { StoresModule } from './stores/stores.module';
 import { UsersModule } from './users/users.module';
+import { dbdatasource } from './config/data.source';
 
 @Module({
 	imports: [
@@ -19,17 +18,7 @@ import { UsersModule } from './users/users.module';
 		ProductsModule,
 		OrdersModule,
 		StoresModule,
-		TypeOrmModule.forRoot({
-			type: 'mysql',
-			host: 'localhost',
-			port: 3306,
-			username: 'root',
-			password: 'thogia123',
-			database: 'nest-boilerplate',
-			entities: [Store, Product],
-			synchronize: true,
-			autoLoadEntities: true,
-		}),
+		TypeOrmModule.forRoot(dbdatasource),
 		ThrottlerModule.forRoot([
 			{
 				name: 'short',
