@@ -24,7 +24,7 @@ export class JwtCacheInterceptor implements NestInterceptor {
 
 		if (!token) throw new UnauthorizedException('Token is missing');
 
-		const cachedStore = await this.cacheManager.get(token);
+		const cachedStore = await this.cacheManager .get(token);
 		console.log(
 			'🚀 ~ JwtCacheInterceptor ~ intercept ~ cachedStore:',
 			cachedStore,
