@@ -10,14 +10,14 @@ import {
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { JwtCacheInterceptor } from 'src/interceptors/jwt-cache.interceptor';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { ProductsService } from './products.service';
 import { JwtAuthorizationGuard } from 'src/guards/jwt-auth.guard';
 import { OwnershipGuard } from 'src/guards/ownership.guard';
 import { ExcludeNullInterceptor } from 'src/interceptors/exclude-null.interceptor';
+import { JwtCacheInterceptor } from 'src/interceptors/jwt-cache.interceptor';
 import { TimeoutInterceptor } from 'src/interceptors/timeout.interceptor';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductsService } from './products.service';
 
 @UseInterceptors(TimeoutInterceptor)
 @UseGuards(JwtAuthorizationGuard)
@@ -31,6 +31,11 @@ export class ProductsController {
 	@Post()
 	create(@Body() createProductDto: CreateProductDto) {
 		return this.productsService.create(createProductDto);
+	}
+
+	@Get('test')
+	test() {
+		return true;
 	}
 
 	@UseInterceptors(JwtCacheInterceptor)
